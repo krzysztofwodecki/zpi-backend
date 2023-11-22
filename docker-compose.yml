@@ -7,6 +7,8 @@ services:
       POSTGRES_DB: zpi-db
       POSTGRES_USER: zpi-user
       POSTGRES_PASSWORD: test41test?
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PORT: 5432
     ports:
       - "5432:5432"
   
