@@ -1,22 +1,37 @@
 version: '3'
 
 services:
-  postgres:
+  app:
+      image: 'docker-spring-boot-postgres:latest'
+      build:
+        context: .
+      container_name: app
+      depends_on:
+        - db
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/zpi-db
+        SPRING_DATASOURCE_USERNAME: test
+        SPRING_DATASOURCE_PASSWORD: test
+        SPRING_JPA_HIBERNATE_DDL_AUTO: update
+  
+  db:
     image: postgres:latest
     environment:
       POSTGRES_DB: zpi-db
-      POSTGRES_USER: zpi-user
-      POSTGRES_PASSWORD: test41test?
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_PORT: 5432
     ports:
       - "5432:5432"
   
-  # zpi-backend:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - postgres
-  #   ports:
-  #     - "8080:8080"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
