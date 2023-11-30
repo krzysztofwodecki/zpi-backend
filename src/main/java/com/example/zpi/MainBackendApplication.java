@@ -17,16 +17,17 @@ public class MainBackendApplication {
   }
 
   // Bean that fills db with sample data
-  @Bean
-  public CommandLineRunner demo(CustomerRepository repository) {
-    return (args) -> {
-      // save sample customers
-      repository.save(new Customer("Jack", "Bauer"));
-      repository.save(new Customer("Chloe", "O'Brian"));
-      repository.save(new Customer("Kim", "Bauer"));
-      repository.save(new Customer("David", "Palmer"));
-      repository.save(new Customer("Michelle", "Dessler"));
-    };
-  }
+  // @Bean
+  // public CommandLineRunner demo(CustomerRepository repository) {
+  //   return (args) -> {
+  //     // save sample customers
+  //     repository.save(new Customer("Jack", "Bauer"));
+  //     repository.save(new Customer("Chloe", "O'Brian"));
+  //     repository.save(new Customer("Kim", "Bauer"));
+  //     repository.save(new Customer("David", "Palmer"));
+  //     repository.save(new Customer("Michelle", "Dessler"));
+  //   };
+  //   log.info("...")
+  // }
 
 }
