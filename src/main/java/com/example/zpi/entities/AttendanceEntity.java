@@ -8,22 +8,25 @@ import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Entity
-public class Attendance {
+public class AttendanceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    private User user;
+    private UserEntity user;
 
     @ManyToOne
-    private Event event;
+    private EventEntity event;
 
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
 
-    // Getters and setters (and other constructors if needed)
-
-    // Constructors, getters, setters, and other methods
+    public AttendanceEntity(UserEntity user, EventEntity event, LocalDateTime checkInTime, LocalDateTime checkOutTime){
+        this.user = user;
+        this.event = event;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
+    }
 }
