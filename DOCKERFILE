@@ -1,12 +1,12 @@
-# FROM openjdk:11-jre-slim
+FROM openjdk:17
 
-# WORKDIR /backend
+# Application must be packaged after changes before building container
+ARG JAR_FILE=*.jar
 
-# # Copy the application JAR file into the container at /app
-# COPY target/zpi-backend.jar /backend/zpi-backend.jar
+WORKDIR /ZPI-BACKEND
 
-# # Expose the port that the application will run on
-# EXPOSE 8080
+COPY target/${JAR_FILE} application.jar
 
-# # Specify the command to run on container startup
-# CMD ["java", "-jar", "zpi-backend.jar"]
+EXPOSE 8080
+
+CMD ["java", "-jar", "application.jar"]
