@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +15,9 @@ public class User {
     private String username;
     private String email;
 
-    // Getters and setters (and other constructors if needed)
-
-    // Constructors, getters, setters, and other methods
+    public UserEntity(String username, String email){
+        this.username = username;
+        this.email = email;
+    }
 }
 

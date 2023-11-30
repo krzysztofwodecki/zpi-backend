@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class Event {
+public class EventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,9 @@ public class Event {
     private LocalDateTime eventDateTime;
     private String location;
 
-    // Getters and setters (and other constructors if needed)
-
-    // Constructors, getters, setters, and other methods
+    public EventEntity(String name, LocalDateTime dateTime, String location){
+        this.eventName = name;
+        this.eventDateTime = dateTime;
+        this.location = location;
+    }
 }
