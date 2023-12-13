@@ -6,8 +6,8 @@ import com.example.zpi.entities.UserEntity;
 import com.example.zpi.repositories.AttendanceRepository;
 import com.example.zpi.repositories.EventRepository;
 import com.example.zpi.repositories.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,23 +18,23 @@ import java.time.LocalDateTime;
 @SpringBootApplication
 public class MainBackendApplication {
 
-  private static final Logger log = LoggerFactory.getLogger(MainBackendApplication.class);
+  // private static final Logger log = LoggerFactory.getLogger(MainBackendApplication.class);
 
   public static void main(String[] args) {
     SpringApplication.run(MainBackendApplication.class);
   }
 
-  // Bean that fills db with sample data
+
    @Bean
    public CommandLineRunner demo(AttendanceRepository attendanceRepo,
                                  EventRepository eventRepo,
                                  UserRepository userRepo) {
      return (args) -> {
-         var user1 = new UserEntity("User 1", "user1@exampl.com");
+         UserEntity user1 = new UserEntity("User 1", "user1@exampl.com");
          user1 = userRepo.save(user1);
-         var event1 = new EventEntity("Event 1", LocalDateTime.now(), "Place 1");
+         EventEntity event1 = new EventEntity("Event 1", LocalDateTime.now(), "Place 1");
          event1 = eventRepo.save(event1);
-         var attendance1 = new AttendanceEntity(user1, event1, LocalDateTime.now(), LocalDateTime.now());
+         AttendanceEntity attendance1 = new AttendanceEntity(user1, event1, LocalDateTime.now(), LocalDateTime.now());
          attendance1 = attendanceRepo.save(attendance1);
      };
    }
