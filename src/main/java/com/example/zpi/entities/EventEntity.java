@@ -4,8 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 public class EventEntity {
 
@@ -14,12 +19,13 @@ public class EventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private Long creatorId;
     private String eventName;
     private LocalDateTime eventDateTime;
     private String location;
 
-    public EventEntity(String name, LocalDateTime dateTime, String location){
+    public EventEntity(Long creatorId, String name, LocalDateTime dateTime, String location){
+        this.creatorId = creatorId;
         this.eventName = name;
         this.eventDateTime = dateTime;
         this.location = location;
