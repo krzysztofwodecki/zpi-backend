@@ -70,7 +70,7 @@ docker-compose down
   - 400 - w przypadku wystąpienia null w którymś polu, niepoprawnie zbudowanego JSONa
 
 ## Aktualizuj Wydarzenie
-- **Endpoint:** `/events`
+- **Endpoint:** `/events/{id}`
 - **Metoda HTTP:** `PUT`
 - **Opis:** Aktualizuje istniejące wydarzenie. Jeśli dane pole nie zostanie podane, zachowana zostanie oryginalna wartość.
 - **Przykładowe body** 
