@@ -36,7 +36,7 @@ public class MainBackendApplication {
          event1 = eventRepo.save(event1);
          EventEntity event2 = new EventEntity(2L,"Event 2", LocalDateTime.now(), "Place 2");
          event2 = eventRepo.save(event2);
-         AttendanceEntity attendance1 = new AttendanceEntity(user1, event1, LocalDateTime.now(), LocalDateTime.now());
+         AttendanceEntity attendance1 = new AttendanceEntity(user1, event1, LocalDateTime.now());
          attendance1 = attendanceRepo.save(attendance1);
      };
    }
