@@ -106,5 +106,17 @@ docker-compose down
     ```
   - 404 - nie znaleziono
 
-
-
+## Dodaj obecność jeśli nie istnieje
+- **Endpoint:** `/events/{id}/checkIn`
+- **Metoda HTTP:** `POST`
+- **Przykładowe body**
+  ```json
+  {"id":1}
+  ```
+- **Opis:** Do wydarzenia określonego przez `id` i użytkownika o `id` podanym w body dodaje obecność jeśli jeszcze jej nie ma. Zwraca istniejące lub nowe wartości encji.
+- **Response:**
+  - 200
+    ```json
+    {"id":3,"userId":1,"eventId":2,"checkInTime":"2024-01-03T13:50:04.521352"} 
+    ```
+  - 404 - nie znaleziono użytkownika lub wydarzenia

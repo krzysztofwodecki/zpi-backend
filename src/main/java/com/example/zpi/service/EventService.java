@@ -2,8 +2,10 @@ package com.example.zpi.service;
 
 import com.example.zpi.entities.AttendanceEntity;
 import com.example.zpi.entities.EventEntity;
+import com.example.zpi.entities.UserEntity;
 import com.example.zpi.repositories.AttendanceRepository;
 import com.example.zpi.repositories.EventRepository;
+import com.example.zpi.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,13 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final AttendanceRepository attendanceRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public EventService(EventRepository eventRepository, AttendanceRepository attendanceRepository) {
+    public EventService(EventRepository eventRepository, AttendanceRepository attendanceRepository, UserRepository userRepository) {
         this.eventRepository = eventRepository;
         this.attendanceRepository = attendanceRepository;
+        this.userRepository = userRepository;
     }
 
     public List<EventEntity> getSortedEvents(String sortBy) {
@@ -84,5 +88,20 @@ public class EventService {
                 event.getEventDateTime() != null &&
                 event.getEventName() != null &&
                 event.getLocation() != null;
+    }
+
+    public AttendanceEntity getAttendanceByUserAndEventId(Long userId, Long eventId) {
+        return attendanceRepository.findByUserIdAndEventId(userId, eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Attendance not found with user id: " + userId + " and event id: " + eventId));
+    }
+
+    public UserEntity getUserById(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+    }
+
+    public AttendanceEntity createAttendance(UserEntity user, EventEntity event) {
+        AttendanceEntity entity = new AttendanceEntity(user, event, java.time.LocalDateTime.now());
+        return attendanceRepository.save(entity);
     }
 }
