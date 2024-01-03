@@ -104,4 +104,8 @@ public class EventService {
         AttendanceEntity entity = new AttendanceEntity(user, event, java.time.LocalDateTime.now());
         return attendanceRepository.save(entity);
     }
+
+    public List<AttendanceEntity> getAttendancesByUserId(Long userId) {
+        return attendanceRepository.findByUserId(userId);
+    }
 }
