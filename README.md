@@ -120,3 +120,13 @@ docker-compose down
     {"id":3,"userId":1,"eventId":2,"checkInTime":"2024-01-03T13:50:04.521352"} 
     ```
   - 404 - nie znaleziono użytkownika lub wydarzenia
+
+## Pobierz listę obecności użytkownika
+- **Endpoint:** `/attendance/history?userId={userId}`
+- **Metoda HTTP:** `GET`
+- **Opis:** Dla użytkownika o `id` podanym w query zostaje pobrana lista obecności posortowana według daty dodania.
+- **Response:**
+  - 200
+    ```json
+    // TODO
+    ```
