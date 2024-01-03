@@ -130,3 +130,13 @@ docker-compose down
     ```json
     // TODO
     ```
+
+## Pobierz listę nagród
+- **Endpoint:** `/rewards/`
+- **Metoda HTTP:** `GET`
+- **Opis:** Zwraca listę dostępnych nagród.
+- **Response:**
+  - 200
+    ```json
+    // TODO
+    ```
