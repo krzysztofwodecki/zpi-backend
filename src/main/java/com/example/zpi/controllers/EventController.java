@@ -1,6 +1,8 @@
 package com.example.zpi.controllers;
 
+import com.example.zpi.entities.AttendanceEntity;
 import com.example.zpi.entities.EventEntity;
+import com.example.zpi.entities.UserEntity;
 import com.example.zpi.service.EventService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -74,4 +76,33 @@ public class EventController {
         }
     }
 
+    @PostMapping("/{id}/checkIn")
+    public ResponseEntity<AttendanceEntity> checkUserIn(
+            @PathVariable Long id,
+            @RequestBody UserEntity user) {
+        EventEntity eventEntity;
+        try {
+            eventEntity = eventService.getEventById(id);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        UserEntity userEntity;
+        try {
+            userEntity = eventService.getUserById(user.getId());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        AttendanceEntity existingAttendance;
+        try {
+            existingAttendance = eventService.getAttendanceByUserAndEventId(user.getId(), id);
+        } catch (EntityNotFoundException e) {
+            existingAttendance = null;
+        }
+        if(existingAttendance != null) {
+            return ResponseEntity.ok(existingAttendance);
+        }else {
+            AttendanceEntity createdAttendance = eventService.createAttendance(userEntity, eventEntity);
+            return ResponseEntity.ok(createdAttendance);
+        }
+    }
 }

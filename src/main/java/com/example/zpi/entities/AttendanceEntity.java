@@ -28,12 +28,10 @@ public class AttendanceEntity {
     private EventEntity event;
 
     private LocalDateTime checkInTime;
-    private LocalDateTime checkOutTime;
 
-    public AttendanceEntity(UserEntity user, EventEntity event, LocalDateTime checkInTime, LocalDateTime checkOutTime){
+    public AttendanceEntity(UserEntity user, EventEntity event, LocalDateTime checkInTime){
         this.user = user;
         this.event = event;
         this.checkInTime = checkInTime;
-        this.checkOutTime = checkOutTime;
     }
 }
