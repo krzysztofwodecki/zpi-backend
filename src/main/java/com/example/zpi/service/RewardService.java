@@ -1,9 +1,6 @@
 package com.example.zpi.service;
 
-import com.example.zpi.entities.AttendanceEntity;
-import com.example.zpi.entities.EventEntity;
-import com.example.zpi.entities.RewardEntity;
-import com.example.zpi.entities.UserEntity;
+import com.example.zpi.entities.*;
 import com.example.zpi.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,11 @@ public class RewardService {
     public List<RewardEntity> getAllRewards(){
         List<RewardEntity> rewards = new ArrayList<RewardEntity>();
         rewardRepository.findAll().forEach(rewards::add);
+        return rewards;
+    }
+
+    public List<RedeemedRewardEntity> getRedeemedRewards(Long userId){
+        List<RedeemedRewardEntity> rewards = redeemedRewardRepository.getRedeemedRewardsByUserId(userId);
         return rewards;
     }
 }
