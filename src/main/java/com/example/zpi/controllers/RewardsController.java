@@ -6,10 +6,7 @@ import com.example.zpi.service.EventService;
 import com.example.zpi.service.RewardService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +25,16 @@ public class RewardsController {
     public ResponseEntity<List<RewardEntity>> getAvailableRewards() {
         List<RewardEntity> rewards = rewardService.getAllRewards();
         return ResponseEntity.ok(rewards);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RewardEntity> getAvailableRewardById(@PathVariable Long id) {
+        try{
+            RewardEntity reward = rewardService.getRewardById(id);
+            return ResponseEntity.ok(reward);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/redeemed")

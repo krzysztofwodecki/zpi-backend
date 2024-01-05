@@ -152,3 +152,15 @@ docker-compose down
     ```
   - 404 \
   Jeśli użytkownik nie istnieje.
+
+## Pobierz detale dotyczące nagrody według id
+- **Endpoint:** `/rewards/{id}`
+- **Metoda HTTP:** `GET`
+- **Opis:** Zwraca informację o nagrodzie.
+- **Response:**
+  - 200
+    ```json
+    // TODO
+    ```
+  - 404 \
+  Jeśli nagroda nie istnieje.
