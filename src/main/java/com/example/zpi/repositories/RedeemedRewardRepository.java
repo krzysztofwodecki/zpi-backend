@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface RedeemedRewardRepository extends CrudRepository<RedeemedRewardRepository, Long> {
+public interface RedeemedRewardRepository extends CrudRepository<RedeemedRewardEntity, Long> {
     public List<RedeemedRewardEntity>  getRedeemedRewardsByUserId(Long userId);
 }

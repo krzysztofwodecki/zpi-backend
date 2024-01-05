@@ -164,3 +164,21 @@ docker-compose down
     ```
   - 404 \
   Jeśli nagroda nie istnieje.
+
+## Kup nagrodę
+- **Endpoint:** `/rewards/{id}/redeem`
+- **Metoda HTTP:** `POST`
+- **Body:**
+  ```
+  {"id":1}
+  ```
+- **Opis:** Wykupuje nagrodę o `id` podanym w url użytkownikowi o `id`. Odejmuje użytkownikowi punkty w ilości wartości nagrody.
+- **Response:**
+  - 200
+    ```json
+    // TODO
+    ```
+  - 404 \
+  Jeśli nagroda lub użytkownik nie istnieje.
+  - 409 \
+  Jeśli użytkownik nie ma wystarczającej ilości punktów. Ten kod jest aktualnie nieaktywny.
