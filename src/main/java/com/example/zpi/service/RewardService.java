@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Validated
@@ -33,7 +34,11 @@ public class RewardService {
     }
 
     public List<RedeemedRewardEntity> getRedeemedRewards(Long userId){
-        List<RedeemedRewardEntity> rewards = redeemedRewardRepository.getRedeemedRewardsByUserId(userId);
-        return rewards;
+        return redeemedRewardRepository.getRedeemedRewardsByUserId(userId);
+    }
+
+    public RewardEntity getRewardById(Long id){
+        return rewardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Reward not found with id: " + id));
     }
 }
