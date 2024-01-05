@@ -41,4 +41,15 @@ public class RewardService {
         return rewardRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reward not found with id: " + id));
     }
+
+    public RedeemedRewardEntity redeemRewardForUser(RewardEntity reward, UserEntity user){
+        //if(user.getPoints() < reward.getValue())
+        //    throw new IllegalArgumentException();
+
+        user.setPoints(user.getPoints() - reward.getValue());
+        userRepository.save(user);
+        RedeemedRewardEntity redeemedRewardEntity = new RedeemedRewardEntity(reward, user);
+        redeemedRewardEntity = redeemedRewardRepository.save(redeemedRewardEntity);
+        return redeemedRewardEntity;
+    }
 }
