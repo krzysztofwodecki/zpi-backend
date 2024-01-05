@@ -20,10 +20,12 @@ public class UserEntity {
 
     private String username;
     private String email;
+    private Long points;
 
-    public UserEntity(String username, String email){
+    public UserEntity(String username, String email, Long points){
         this.username = username;
         this.email = email;
+        this.points = points;
     }
 }
 

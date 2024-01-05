@@ -30,7 +30,7 @@ public class MainBackendApplication {
                                  EventRepository eventRepo,
                                  UserRepository userRepo) {
      return (args) -> {
-         UserEntity user1 = new UserEntity("User 1", "user1@exampl.com");
+         UserEntity user1 = new UserEntity("User 1", "user1@exampl.com", 1000l);
          user1 = userRepo.save(user1);
          EventEntity event1 = new EventEntity(1L,"Event 1", LocalDateTime.now(), "Place 1");
          event1 = eventRepo.save(event1);

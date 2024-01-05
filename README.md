@@ -140,3 +140,15 @@ docker-compose down
     ```json
     // TODO
     ```
+
+## Pobierz listę nagród wypłaconych przez użytkownika
+- **Endpoint:** `/rewards/redeemed?userId={id}`
+- **Metoda HTTP:** `GET`
+- **Opis:** Zwraca listę nagród wypłaconych przez użytkownika.
+- **Response:**
+  - 200
+    ```json
+    // TODO
+    ```
+  - 404 \
+  Jeśli użytkownik nie istnieje.

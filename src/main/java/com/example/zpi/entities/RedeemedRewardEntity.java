@@ -7,9 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class RedeemedReward {
+public class RedeemedRewardEntity {
 
-    protected RedeemedReward() {}
+    protected RedeemedRewardEntity() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class RedeemedReward {
     private UserEntity user;
 
 
-    public RedeemedReward(RewardEntity reward, UserEntity user){
+    public RedeemedRewardEntity(RewardEntity reward, UserEntity user){
         this.reward = reward;
         this.user = user;
     }
