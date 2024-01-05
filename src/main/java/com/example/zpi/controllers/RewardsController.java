@@ -2,9 +2,11 @@ package com.example.zpi.controllers;
 
 import com.example.zpi.entities.RedeemedRewardEntity;
 import com.example.zpi.entities.RewardEntity;
+import com.example.zpi.entities.UserEntity;
 import com.example.zpi.service.EventService;
 import com.example.zpi.service.RewardService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,5 +48,28 @@ public class RewardsController {
         }
         List<RedeemedRewardEntity> rewards = rewardService.getRedeemedRewards(userId);
         return ResponseEntity.ok(rewards);
+    }
+
+    @PostMapping("/{id}/redeem")
+    public ResponseEntity<RedeemedRewardEntity> redeemReward(@RequestParam(required = true) Long id, @RequestBody UserEntity user) {
+        RewardEntity reward;
+        try{
+            reward = rewardService.getRewardById(id);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        UserEntity userEntity;
+        try{
+            userEntity = eventService.getUserById(user.getId());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try{
+            RedeemedRewardEntity redeemedRewardEntity = rewardService.redeemRewardForUser(reward, userEntity);
+            return ResponseEntity.ok(redeemedRewardEntity);
+        }catch(IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).build();
+        }
     }
 }
