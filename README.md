@@ -26,6 +26,12 @@ Usunięcie niepotrzebnych kontenerów <br>
 docker-compose down
 ```
 
+Przy nowych zmianach na backendzie (właśnych lub aktualizacja repozytorium) należy zbudować obraz od początku. Inaczej docker będzie cachować starę pliki i na ich podstawie budować projekt. <br>
+Można zmusić dockera do zbudowania nowego kontenera usuwając stary kontener w GUI lub użyc komendy:<br>
+```bash
+docker-compose down && docker-compose build --no-cache
+```
+
 # Działające usługi
 
 - PostgreSQL
