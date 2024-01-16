@@ -1,14 +1,21 @@
 package com.example.zpi.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.zpi.entities.UserEntity;
+import com.example.zpi.repositories.UserRepository;
 import com.example.zpi.security.AuthRequest;
 import com.example.zpi.security.JwtService;
 import com.example.zpi.security.UserInfoService;
@@ -28,6 +35,10 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager; 
     
+    @Autowired
+    private UserRepository userRepository;
+
+
     //register
     @PostMapping("/register") 
     public String addNewUser(@RequestBody UserEntity userInfo) { 
@@ -47,15 +58,26 @@ public class UserController {
   
     @GetMapping("/user") 
     @PreAuthorize("hasAuthority('ROLE_USER')") 
-    public String userProfile(HttpServletRequest request) {
+    public Optional<UserEntity> userProfile(HttpServletRequest request) {
+        System.out.println("/user endpoint");
+        System.out.println(request.toString());
         String authHeader = request.getHeader("Authorization"); 
         String token = null; 
         String email = null;
+        System.out.println(authHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) { 
             token = authHeader.substring(7); 
             email = jwtService.extractUsername(token); 
+        }
+        System.out.println(token);
+        System.out.println(email);
+        
+        if (email != null) { 
+            return userRepository.findByEmail(email);
         } 
-    } 
+        throw new UsernameNotFoundException("invalid user request !"); 
+        
+    }
     
     
   
