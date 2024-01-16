@@ -39,6 +39,60 @@ docker-compose down && docker-compose build --no-cache
 - PgAdmin
 
 # Endpointy
+## Logowanie
+- **Endpoint:** `/auth/login`
+- **Metoda HTTP:** `POST`
+- **Payload:**
+  - ```json 
+    {
+      "email": "user1@exampl.com",
+      "password": "passwd"
+    }
+    ```
+- **Opis:** Loguję użytkownika i zwraca klucz jwt.
+- **Response:**
+  - 200
+    ```
+    eyJhbGciOiJ...lInk87GfI
+    ```
+## Rejestracja
+- **Endpoint:** `/auth/register`
+- **Metoda HTTP:** `POST`
+- **Payload:**
+  - ```json 
+    {
+      "email": "user1@exampl.com",
+      "password": "passwd"
+    }
+    ```
+- **Opis:** Rejestruje użytkownika i zwraca jego dane.
+- **Response:**
+  - 200
+    ```json 
+    {
+      "id": 2,
+      "email": "test12@mail.com",
+      "roles": "ROLE_USER",
+      "points": 0
+    }
+    ```
+## Do reszty endpointów trzeba dołączyć header z kluczem jwt
+```Bearer {jwtkey}```
+
+## Użytkownik
+- **Endpoint:** `/auth/user`
+- **Metoda HTTP:** `GET`
+- **Opis:** zwraca jego dane.
+- **Response:**
+  - 200
+    ```json
+    {
+      "id": 2,
+      "email": "test12@mail.com",
+      "roles": "ROLE_USER",
+      "points": 0
+    }
+    ```    
 
 ## Pobierz Wszystkie Wydarzenia
 - **Endpoint:** `/events?sortBy={time/name}`

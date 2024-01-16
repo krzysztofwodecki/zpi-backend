@@ -40,13 +40,14 @@ public class UserController {
 
 
     //register
-    @PostMapping("/register") 
-    public String addNewUser(@RequestBody UserEntity userInfo) { 
+    @PostMapping("/register")
+    public UserEntity addNewUser(@RequestBody UserEntity userInfo) { 
+        userInfo.setPoints(0l);
         return service.addUser(userInfo); 
     }
 
     //login
-    @PostMapping("/login") 
+    @PostMapping("/login")
     public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) { 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())); 
         if (authentication.isAuthenticated()) { 
@@ -56,29 +57,20 @@ public class UserController {
         } 
     }
   
-    @GetMapping("/user") 
-    @PreAuthorize("hasAuthority('ROLE_USER')") 
+    @GetMapping("/user")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public Optional<UserEntity> userProfile(HttpServletRequest request) {
-        System.out.println("/user endpoint");
-        System.out.println(request.toString());
         String authHeader = request.getHeader("Authorization"); 
         String token = null; 
         String email = null;
-        System.out.println(authHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) { 
             token = authHeader.substring(7); 
             email = jwtService.extractUsername(token); 
         }
-        System.out.println(token);
-        System.out.println(email);
         
         if (email != null) { 
             return userRepository.findByEmail(email);
         } 
         throw new UsernameNotFoundException("invalid user request !"); 
-        
-    }
-    
-    
-  
+    }  
 } 

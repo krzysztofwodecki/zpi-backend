@@ -19,20 +19,12 @@ public class UserInfoService implements UserDetailsService {
     @Autowired
     private UserRepository repository; 
   
-    // @Autowired
+
     private PasswordEncoder encoder;
 
     public UserInfoService() {
         this.encoder = new BCryptPasswordEncoder();
     }
-    // private final UserRepository repository;
-    // private final PasswordEncoder encoder;
-
-    // @Autowired
-    // public UserInfoService(UserRepository repository, PasswordEncoder encoder) {
-    //     this.repository = repository;
-    //     this.encoder = encoder;
-    // }
 
   
     @Override
@@ -45,10 +37,10 @@ public class UserInfoService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found " + username)); 
     } 
   
-    public String addUser(UserEntity userInfo) { 
-        userInfo.setPassword(encoder.encode(userInfo.getPassword())); 
-        repository.save(userInfo); 
-        return "User Added Successfully"; 
+    public UserEntity addUser(UserEntity userInfo) { 
+        userInfo.setPassword(encoder.encode(userInfo.getPassword()));
+        userInfo.setRoles("ROLE_USER");
+        return repository.save(userInfo); 
     } 
   
   
