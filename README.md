@@ -38,6 +38,9 @@ docker-compose down && docker-compose build --no-cache
 - Spring
 - PgAdmin
 
+# Link do testów w Postmanie
+https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collection/26206439-b5d63f8f-938c-45b1-abd9-522683ea75d5
+
 # Endpointy
 ## Logowanie
 - **Endpoint:** `/auth/login`
