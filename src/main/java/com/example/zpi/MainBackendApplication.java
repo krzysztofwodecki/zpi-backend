@@ -6,6 +6,9 @@ import com.example.zpi.entities.UserEntity;
 import com.example.zpi.repositories.AttendanceRepository;
 import com.example.zpi.repositories.EventRepository;
 import com.example.zpi.repositories.UserRepository;
+import com.example.zpi.security.UserInfoService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -19,6 +22,8 @@ import java.time.LocalDateTime;
 public class MainBackendApplication {
 
   // private static final Logger log = LoggerFactory.getLogger(MainBackendApplication.class);
+  @Autowired
+  private UserInfoService userInfoService;
 
   public static void main(String[] args) {
     SpringApplication.run(MainBackendApplication.class);
@@ -30,8 +35,8 @@ public class MainBackendApplication {
                                  EventRepository eventRepo,
                                  UserRepository userRepo) {
      return (args) -> {
-         UserEntity user1 = new UserEntity("User 1", "user1@exampl.com", 1000l);
-         user1 = userRepo.save(user1);
+         UserEntity user1 = new UserEntity("user1@exampl.com", "passwd", "ROLE_USER", 1000l);
+         user1 = userInfoService.addUser(user1);
          EventEntity event1 = new EventEntity(1L,"Event 1", LocalDateTime.now(), "Place 1");
          event1 = eventRepo.save(event1);
          EventEntity event2 = new EventEntity(2L,"Event 2", LocalDateTime.now(), "Place 2");

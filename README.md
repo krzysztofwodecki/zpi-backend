@@ -26,6 +26,12 @@ Usunięcie niepotrzebnych kontenerów <br>
 docker-compose down
 ```
 
+Przy nowych zmianach na backendzie (właśnych lub aktualizacja repozytorium) należy zbudować obraz od początku. Inaczej docker będzie cachować starę pliki i na ich podstawie budować projekt. <br>
+Można zmusić dockera do zbudowania nowego kontenera usuwając stary kontener w GUI lub użyc komendy:<br>
+```bash
+docker-compose down && docker-compose build --no-cache
+```
+
 # Działające usługi
 
 - PostgreSQL
@@ -33,6 +39,60 @@ docker-compose down
 - PgAdmin
 
 # Endpointy
+## Logowanie
+- **Endpoint:** `/auth/login`
+- **Metoda HTTP:** `POST`
+- **Payload:**
+  - ```json 
+    {
+      "email": "user1@exampl.com",
+      "password": "passwd"
+    }
+    ```
+- **Opis:** Loguję użytkownika i zwraca klucz jwt.
+- **Response:**
+  - 200
+    ```
+    eyJhbGciOiJ...lInk87GfI
+    ```
+## Rejestracja
+- **Endpoint:** `/auth/register`
+- **Metoda HTTP:** `POST`
+- **Payload:**
+  - ```json 
+    {
+      "email": "user1@exampl.com",
+      "password": "passwd"
+    }
+    ```
+- **Opis:** Rejestruje użytkownika i zwraca jego dane.
+- **Response:**
+  - 200
+    ```json 
+    {
+      "id": 2,
+      "email": "test12@mail.com",
+      "roles": "ROLE_USER",
+      "points": 0
+    }
+    ```
+## Do reszty endpointów trzeba dołączyć header z kluczem jwt
+```Bearer {jwtkey}```
+
+## Użytkownik
+- **Endpoint:** `/auth/user`
+- **Metoda HTTP:** `GET`
+- **Opis:** zwraca jego dane.
+- **Response:**
+  - 200
+    ```json
+    {
+      "id": 2,
+      "email": "test12@mail.com",
+      "roles": "ROLE_USER",
+      "points": 0
+    }
+    ```    
 
 ## Pobierz Wszystkie Wydarzenia
 - **Endpoint:** `/events?sortBy={time/name}`

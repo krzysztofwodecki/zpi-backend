@@ -23,7 +23,7 @@ public class RewardsController {
         this.eventService = eventService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<RewardEntity>> getAvailableRewards() {
         List<RewardEntity> rewards = rewardService.getAllRewards();
         return ResponseEntity.ok(rewards);
