@@ -111,6 +111,10 @@ public class EventService {
         EventEntity event = getEventById(eventId);
         UserEntity user = userRepository.findById(getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        AttendanceEntity existing = attendanceRepository.findByUserAndEvent(user, event);
+        if(existing != null){
+            return existing;
+        }
         AttendanceEntity entity = new AttendanceEntity(user, event, java.time.LocalDateTime.now());
         return attendanceRepository.save(entity);
     }
