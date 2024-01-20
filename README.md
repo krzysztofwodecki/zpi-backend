@@ -38,6 +38,9 @@ docker-compose down && docker-compose build --no-cache
 - Spring
 - PgAdmin
 
+# Link do testów w Postmanie
+https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collection/26206439-b5d63f8f-938c-45b1-abd9-522683ea75d5
+
 # Endpointy
 ## Logowanie
 - **Endpoint:** `/auth/login`
@@ -78,6 +81,16 @@ docker-compose down && docker-compose build --no-cache
     ```
 ## Do reszty endpointów trzeba dołączyć header z kluczem jwt
 ```Bearer {jwtkey}```
+
+## Wylogowanie
+- **Endpoint:** `/auth/logout`
+- **Metoda HTTP:** `POST`
+- **Opis:** Wylogowuje użytkownika (przesyłany token staje się nieaktualny)
+- **Response:**
+  - 200
+    ```
+    Logout successful
+    ```
 
 ## Użytkownik
 - **Endpoint:** `/auth/user`
@@ -120,7 +133,7 @@ docker-compose down && docker-compose build --no-cache
 - **Opis:** Tworzy nowe wydarzenie.
 - **Przykładowe body** 
     ```json
-    {"id":4,"creatorId":1,"eventName":"New event","eventDateTime":"2023-12-28T18:57:06.314245","location":"New place"}
+    {"creatorId":1,"eventName":"New event","eventDateTime":"2023-12-28T18:57:06.314245","location":"New place"}
     ```
 - **Response:**
   - 201
@@ -143,7 +156,7 @@ docker-compose down && docker-compose build --no-cache
     {"id":2,"creatorId":2,"eventName":"updated","eventDateTime":"2023-12-28T18:57:06.314245","location":"Place 2"}
     ```
   - 404 - nie znaleziono wydarzenia z podanym id
-  - 403 - użytkownik nie jest właścicielem wydarzenia (TODO)
+  - 403 - użytkownik nie jest właścicielem wydarzenia
 
 ## Usuń Wydarzenie
 - **Endpoint:** `/events/{id}`
@@ -152,7 +165,7 @@ docker-compose down && docker-compose build --no-cache
 - **Response:**
   - 204
   - 404 - nie znaleziono wydarzenia z podanym id
-  - 403 - użytkownik nie jest właścicielem wydarzenia (TODO)
+  - 403 - użytkownik nie jest właścicielem wydarzenia
 
 
 ## Pobierz Wydarzenie według Id
@@ -166,18 +179,43 @@ docker-compose down && docker-compose build --no-cache
     ```
   - 404 - nie znaleziono
 
+## Dodaj wydarzenie do ulubionych
+- **Endpoint:** `/events/{id}/like`
+- **Metoda HTTP:** `POST`
+- **Opis:** Dodaje wydarzenie do ulubionych
+- **Response:**
+  - 200 (info o wydarzeniu)
+    ```json
+    {"id":2,"creatorId":2,"eventName":"Event 2","eventDateTime":"2024-01-20T20:45:44.125845","location":"Place 2"}
+    ```
+  - 404 - nie znaleziono
+ 
+## Usuń wydarzenie z ulubionych
+- **Endpoint:** `/events/{id}/like`
+- **Metoda HTTP:** `DELETE`
+- **Opis:** Usuwa wydarzenie z ulubionych
+- **Response:**
+  - 204 
+  - 404 - nie znaleziono
+ 
+## Pobierz ulubione wydarzenia
+- **Endpoint:** `/events/liked`
+- **Metoda HTTP:** `GET`
+- **Opis:** Pobiera listę z wydarzeniami dodanymi do ulubionych
+- **Response:**
+  - 200 
+    ```json
+    [{"id":3,"creatorId":1,"eventName":"updated","eventDateTime":"2023-12-28T18:57:06.314245","location":"New place"}]
+    ```
+  
 ## Dodaj obecność jeśli nie istnieje
 - **Endpoint:** `/events/{id}/checkIn`
 - **Metoda HTTP:** `POST`
-- **Przykładowe body**
-  ```json
-  {"id":1}
-  ```
-- **Opis:** Do wydarzenia określonego przez `id` i użytkownika o `id` podanym w body dodaje obecność jeśli jeszcze jej nie ma. Zwraca istniejące lub nowe wartości encji.
+- **Opis:** Do wydarzenia określonego przez `id` dodaje obecność. Zwraca istniejące lub nowe wartości encji (id użytkownika pobierane jest z tokenu do autoryzacji)
 - **Response:**
   - 200
     ```json
-    {"id":3,"userId":1,"eventId":2,"checkInTime":"2024-01-03T13:50:04.521352"} 
+    {"id":4,"user":{"id":1,"email":"user1@exampl.com","roles":"ROLE_USER","points":200},"event":{"id":2,"creatorId":2,"eventName":"Event 2","eventDateTime":"2024-01-20T20:45:44.125845","location":"Place 2"},"checkInTime":"2024-01-20T21:14:24.079852995"}
     ```
   - 404 - nie znaleziono użytkownika lub wydarzenia
 
@@ -188,17 +226,17 @@ docker-compose down && docker-compose build --no-cache
 - **Response:**
   - 200
     ```json
-    // TODO
+    [{"id":2,"creatorId":2,"eventName":"Event 2","eventDateTime":"2024-01-20T20:45:44.125845","location":"Place 2"}]
     ```
 
 ## Pobierz listę nagród
-- **Endpoint:** `/rewards/`
+- **Endpoint:** `/rewards`
 - **Metoda HTTP:** `GET`
 - **Opis:** Zwraca listę dostępnych nagród.
 - **Response:**
   - 200
     ```json
-    // TODO
+    [{"id":1,"name":"reward1","description":"desc","value":400},{"id":2,"name":"reward2","description":"desc2","value":900}]
     ```
 
 ## Pobierz listę nagród wypłaconych przez użytkownika
@@ -208,7 +246,7 @@ docker-compose down && docker-compose build --no-cache
 - **Response:**
   - 200
     ```json
-    // TODO
+    [{"id":1,"name":"reward1","description":"desc","value":400},{"id":1,"name":"reward1","description":"desc","value":400}]
     ```
   - 404 \
   Jeśli użytkownik nie istnieje.
@@ -220,7 +258,7 @@ docker-compose down && docker-compose build --no-cache
 - **Response:**
   - 200
     ```json
-    // TODO
+    {"id":1,"name":"reward1","description":"desc","value":400}
     ```
   - 404 \
   Jeśli nagroda nie istnieje.
@@ -228,17 +266,13 @@ docker-compose down && docker-compose build --no-cache
 ## Kup nagrodę
 - **Endpoint:** `/rewards/{id}/redeem`
 - **Metoda HTTP:** `POST`
-- **Body:**
-  ```
-  {"id":1}
-  ```
-- **Opis:** Wykupuje nagrodę o `id` podanym w url użytkownikowi o `id`. Odejmuje użytkownikowi punkty w ilości wartości nagrody.
+- **Opis:** Wykupuje nagrodę o `id` podanym w url (id użytkownika pobierane z tokenu). Odejmuje użytkownikowi punkty w ilości wartości nagrody.
 - **Response:**
   - 200
     ```json
-    // TODO
+    {"id":1,"reward":{"id":1,"name":"reward1","description":"desc","value":400},"user":{"id":1,"email":"user1@exampl.com","roles":"ROLE_USER","points":600}}
     ```
   - 404 \
-  Jeśli nagroda lub użytkownik nie istnieje.
+  Jeśli nagroda nie istnieje.
   - 409 \
-  Jeśli użytkownik nie ma wystarczającej ilości punktów. Ten kod jest aktualnie nieaktywny.
+  Jeśli użytkownik nie ma wystarczającej ilości punktów.
