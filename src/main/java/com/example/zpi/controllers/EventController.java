@@ -2,6 +2,7 @@ package com.example.zpi.controllers;
 
 import com.example.zpi.entities.AttendanceEntity;
 import com.example.zpi.entities.EventEntity;
+import com.example.zpi.entities.LikedEventEntity;
 import com.example.zpi.entities.UserEntity;
 import com.example.zpi.security.UserInfoDetails;
 import com.example.zpi.service.EventService;
@@ -87,6 +88,31 @@ public class EventController {
             AttendanceEntity attendance = eventService.createAttendance(id);
             return ResponseEntity.ok(attendance);
         } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/liked")
+    public ResponseEntity<List<EventEntity>> likedEvents() {
+        return ResponseEntity.ok(eventService.getLikedEvents());
+    }
+
+    @PostMapping("/{id}/like")
+    public ResponseEntity<EventEntity> likeEvent(@PathVariable Long id) {
+        try {
+            EventEntity event = eventService.likeEvent(id);
+            return ResponseEntity.ok(event);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}/like")
+    public ResponseEntity<EventEntity> unlikeEvent(@PathVariable Long id) {
+        try {
+            eventService.unlikeEvent(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }

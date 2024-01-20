@@ -3,6 +3,7 @@ package com.example.zpi.service;
 import com.example.zpi.entities.*;
 import com.example.zpi.repositories.AttendanceRepository;
 import com.example.zpi.repositories.EventRepository;
+import com.example.zpi.repositories.LikedEventRepository;
 import com.example.zpi.repositories.UserRepository;
 import com.example.zpi.security.UserInfoDetails;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,12 +26,14 @@ public class EventService {
     private final EventRepository eventRepository;
     private final AttendanceRepository attendanceRepository;
     private final UserRepository userRepository;
+    private final LikedEventRepository likedEventRepository;
 
     @Autowired
-    public EventService(EventRepository eventRepository, AttendanceRepository attendanceRepository, UserRepository userRepository) {
+    public EventService(EventRepository eventRepository, AttendanceRepository attendanceRepository, UserRepository userRepository, LikedEventRepository likedEventRepository) {
         this.eventRepository = eventRepository;
         this.attendanceRepository = attendanceRepository;
         this.userRepository = userRepository;
+        this.likedEventRepository = likedEventRepository;
     }
 
     public List<EventEntity> getSortedEvents(String sortBy) {
@@ -72,6 +75,8 @@ public class EventService {
 
         List<AttendanceEntity> attendanceEntities = attendanceRepository.findByEventId(id);
         attendanceRepository.deleteAll(attendanceEntities);
+        List<LikedEventEntity> likedEvents = likedEventRepository.findAllByEvent_Id(id);
+        likedEventRepository.deleteAll(likedEvents);
         eventRepository.delete(existingEvent);
     }
 
@@ -107,11 +112,6 @@ public class EventService {
         return currentUserId.equals(event.getCreatorId());
     }
 
-    public AttendanceEntity getAttendanceByUserAndEventId(Long userId, Long eventId) {
-        return attendanceRepository.findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Attendance not found with user id: " + userId + " and event id: " + eventId));
-    }
-
     public UserEntity getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
@@ -137,4 +137,39 @@ public class EventService {
                 .sorted(Comparator.comparing(EventEntity::getEventDateTime).reversed())
                 .collect(Collectors.toList());
     }
+
+    public EventEntity likeEvent(Long eventId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
+        EventEntity event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+        if (likedEventRepository.existsByEvent_IdAndUser_Id(eventId, userId)) {
+            return event;
+        }
+        LikedEventEntity liked = new LikedEventEntity(event,user);
+        return likedEventRepository.save(liked).getEvent();
+    }
+
+    public void unlikeEvent(Long eventId) throws IllegalArgumentException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
+        if (!likedEventRepository.existsByEvent_IdAndUser_Id(eventId, userId)) {
+            throw new IllegalArgumentException();
+        }
+        LikedEventEntity liked = likedEventRepository.findByEvent_IdAndUser_Id(eventId, userId);
+        likedEventRepository.delete(liked);
+    }
+
+    public List<EventEntity> getLikedEvents() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
+        return likedEventRepository.findAllByUser_Id(userId)
+                .stream()
+                .map(LikedEventEntity::getEvent)
+                .collect(Collectors.toList());
+    }
+
+
 }
