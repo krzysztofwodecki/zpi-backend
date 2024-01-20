@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests().requestMatchers("/attendance/**").authenticated() 
                 .and()
-                .authorizeHttpRequests().requestMatchers("/auth/user").authenticated() 
+                .authorizeHttpRequests().requestMatchers("/auth/user", "/auth/logout").authenticated()
                 .and() 
                 .sessionManagement() 
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) 

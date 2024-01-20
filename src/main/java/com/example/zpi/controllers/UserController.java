@@ -56,6 +56,17 @@ public class UserController {
             throw new UsernameNotFoundException("invalid user request !"); 
         } 
     }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            jwtService.invalidateToken(token);
+            return "Logout successful";
+        }
+        return "Invalid Authorization header";
+    }
   
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('ROLE_USER')")

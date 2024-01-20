@@ -8,16 +8,21 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails; 
 import org.springframework.stereotype.Component; 
   
-import java.security.Key; 
-import java.util.Date; 
-import java.util.HashMap; 
-import java.util.Map; 
-import java.util.function.Function; 
-  
+import java.security.Key;
+import java.util.*;
+import java.util.function.Function;
+
+
 @Component
 public class JwtService { 
   
-    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437"; 
+    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
+    private final Set<String> invalidatedTokens = new HashSet<>();
+
+    public void invalidateToken(String token) {
+        invalidatedTokens.add(token);
+    }
+
     public String generateToken(String userName) { 
         Map<String, Object> claims = new HashMap<>(); 
         return createToken(claims, userName); 
@@ -65,7 +70,7 @@ public class JwtService {
   
     public Boolean validateToken(String token, UserDetails userDetails) { 
         final String username = extractUsername(token); 
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token)); 
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) && !invalidatedTokens.contains(token));
     } 
   
   
