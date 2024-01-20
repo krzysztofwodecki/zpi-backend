@@ -6,6 +6,7 @@ import com.example.zpi.entities.UserEntity;
 import com.example.zpi.service.EventService;
 import com.example.zpi.service.RewardService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,36 +41,24 @@ public class RewardsController {
     }
 
     @GetMapping("/redeemed")
-    public ResponseEntity<List<RedeemedRewardEntity>> getRedeemedRewards(@RequestParam(required = true) Long userId) {
+    public ResponseEntity<List<RewardEntity>> getRedeemedRewards(@RequestParam(required = true) Long userId) {
         try{
-            eventService.getUserById(userId);
+            List<RewardEntity> rewards = rewardService.getRedeemedRewards(userId);
+            return ResponseEntity.ok(rewards);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-        List<RedeemedRewardEntity> rewards = rewardService.getRedeemedRewards(userId);
-        return ResponseEntity.ok(rewards);
     }
 
     @PostMapping("/{id}/redeem")
-    public ResponseEntity<RedeemedRewardEntity> redeemReward(@RequestParam(required = true) Long id, @RequestBody UserEntity user) {
-        RewardEntity reward;
-        try{
-            reward = rewardService.getRewardById(id);
+    public ResponseEntity<RedeemedRewardEntity> redeemReward(@PathVariable Long id, @RequestParam(required = true) Long userId) {
+        try {
+            RedeemedRewardEntity reward = rewardService.redeemRewardForUser(id, userId);
+            return ResponseEntity.ok(reward);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
-        }
-        UserEntity userEntity;
-        try{
-            userEntity = eventService.getUserById(user.getId());
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-
-        try{
-            RedeemedRewardEntity redeemedRewardEntity = rewardService.redeemRewardForUser(reward, userEntity);
-            return ResponseEntity.ok(redeemedRewardEntity);
-        }catch(IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(409)).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(409).build();
         }
     }
 }

@@ -44,9 +44,9 @@ public class MainBackendApplication {
          event1 = eventRepo.save(event1);
          EventEntity event2 = new EventEntity(2L,"Event 2", LocalDateTime.now(), "Place 2");
          event2 = eventRepo.save(event2);
-         RewardEntity reward1 = new RewardEntity("reward1","desc",3L);
+         RewardEntity reward1 = new RewardEntity("reward1","desc",400L);
          reward1 = rewardRepo.save(reward1);
-         RewardEntity reward2 = new RewardEntity("reward2","desc2",1L);
+         RewardEntity reward2 = new RewardEntity("reward2","desc2",900L);
          reward2 = rewardRepo.save(reward2);
          AttendanceEntity attendance1 = new AttendanceEntity(user1, event1, LocalDateTime.now());
          attendance1 = attendanceRepo.save(attendance1);
