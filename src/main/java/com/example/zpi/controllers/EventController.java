@@ -52,20 +52,20 @@ public class EventController {
         }
     }
 
-    // TODO: add verification to check if user is the owner of event
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteEvent(@PathVariable Long id) {
         try {
             eventService.deleteEvent(id);
             return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (IllegalAccessException e) {
+            return new ResponseEntity<>("You are not the owner of this event", HttpStatus.FORBIDDEN);
         }
     }
 
-    // TODO: add verification to check if user is the owner of event
     @PutMapping("/{id}")
-    public ResponseEntity<EventEntity> updateEvent(
+    public ResponseEntity<Object> updateEvent(
             @PathVariable Long id,
             @RequestBody EventEntity updatedEvent) {
         try {
@@ -73,6 +73,8 @@ public class EventController {
             return ResponseEntity.ok(savedEvent);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (IllegalAccessException e) {
+            return new ResponseEntity<>("You are not the owner of this event", HttpStatus.FORBIDDEN);
         }
     }
 

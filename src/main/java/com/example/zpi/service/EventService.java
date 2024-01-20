@@ -6,12 +6,15 @@ import com.example.zpi.entities.UserEntity;
 import com.example.zpi.repositories.AttendanceRepository;
 import com.example.zpi.repositories.EventRepository;
 import com.example.zpi.repositories.UserRepository;
+import com.example.zpi.security.UserInfoDetails;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -59,9 +62,13 @@ public class EventService {
     }
 
     @Transactional
-    public void deleteEvent(Long id) {
+    public void deleteEvent(Long id) throws IllegalAccessException {
         EventEntity existingEvent = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
+
+        if (!isCurrentUserEventOwner(existingEvent)) {
+            throw new IllegalAccessException();
+        }
 
         List<AttendanceEntity> attendanceEntities = attendanceRepository.findByEventId(id);
         attendanceRepository.deleteAll(attendanceEntities);
@@ -69,9 +76,13 @@ public class EventService {
     }
 
     @Transactional
-    public EventEntity updateEvent(Long eventId, EventEntity updatedEvent) {
+    public EventEntity updateEvent(Long eventId, EventEntity updatedEvent) throws IllegalAccessException {
         EventEntity existingEvent = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
+
+        if (!isCurrentUserEventOwner(existingEvent)) {
+            throw new IllegalAccessException();
+        }
 
         if (updatedEvent.getEventName() != null)
             existingEvent.setEventName(updatedEvent.getEventName());
@@ -90,12 +101,18 @@ public class EventService {
                 event.getLocation() != null;
     }
 
+    boolean isCurrentUserEventOwner(EventEntity event) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long currentUserId = ((UserInfoDetails) authentication.getPrincipal()).getId();
+        return currentUserId.equals(event.getCreatorId());
+    }
+
     public AttendanceEntity getAttendanceByUserAndEventId(Long userId, Long eventId) {
         return attendanceRepository.findByUserIdAndEventId(userId, eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Attendance not found with user id: " + userId + " and event id: " + eventId));
     }
 
-    public UserEntity getUserById(Long id){
+    public UserEntity getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
