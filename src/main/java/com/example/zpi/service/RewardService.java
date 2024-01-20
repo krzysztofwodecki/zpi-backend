@@ -2,9 +2,12 @@ package com.example.zpi.service;
 
 import com.example.zpi.entities.*;
 import com.example.zpi.repositories.*;
+import com.example.zpi.security.UserInfoDetails;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -49,7 +52,9 @@ public class RewardService {
     }
 
     @Transactional
-    public RedeemedRewardEntity redeemRewardForUser(Long rewardId, Long userId){
+    public RedeemedRewardEntity redeemRewardForUser(Long rewardId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
         RewardEntity reward = rewardRepository.findById(rewardId)
                 .orElseThrow(() -> new EntityNotFoundException("Reward not found with id: " + rewardId));
         UserEntity user = userRepository.findById(userId)

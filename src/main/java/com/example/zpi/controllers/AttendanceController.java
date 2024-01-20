@@ -23,14 +23,8 @@ public class AttendanceController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<List<AttendanceEntity>> getAttendanceHistory(@RequestParam(required = true) Long userId) {
-        List<AttendanceEntity> attendances = eventService.getAttendancesByUserId(userId);
-        Collections.sort(attendances, new Comparator<AttendanceEntity>(){
-            public int compare(AttendanceEntity o1, AttendanceEntity o2){
-                return o1.getCheckInTime().compareTo(o2.getCheckInTime());
-            }
-        });
-        return ResponseEntity.ok(attendances);
+    public ResponseEntity<List<EventEntity>> getAttendanceHistory(@RequestParam(required = true) Long userId) {
+        return ResponseEntity.ok(eventService.getAttendancesByUserId(userId));
     }
 
 }

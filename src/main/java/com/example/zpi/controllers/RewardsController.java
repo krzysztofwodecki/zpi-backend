@@ -51,9 +51,9 @@ public class RewardsController {
     }
 
     @PostMapping("/{id}/redeem")
-    public ResponseEntity<RedeemedRewardEntity> redeemReward(@PathVariable Long id, @RequestParam(required = true) Long userId) {
+    public ResponseEntity<RedeemedRewardEntity> redeemReward(@PathVariable Long id) {
         try {
-            RedeemedRewardEntity reward = rewardService.redeemRewardForUser(id, userId);
+            RedeemedRewardEntity reward = rewardService.redeemRewardForUser(id);
             return ResponseEntity.ok(reward);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

@@ -1,8 +1,6 @@
 package com.example.zpi.service;
 
-import com.example.zpi.entities.AttendanceEntity;
-import com.example.zpi.entities.EventEntity;
-import com.example.zpi.entities.UserEntity;
+import com.example.zpi.entities.*;
 import com.example.zpi.repositories.AttendanceRepository;
 import com.example.zpi.repositories.EventRepository;
 import com.example.zpi.repositories.UserRepository;
@@ -16,7 +14,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -117,12 +117,24 @@ public class EventService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
 
-    public AttendanceEntity createAttendance(UserEntity user, EventEntity event) {
+    public AttendanceEntity createAttendance(Long eventId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
+        EventEntity event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Reward not found with id: " + eventId));
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+
         AttendanceEntity entity = new AttendanceEntity(user, event, java.time.LocalDateTime.now());
         return attendanceRepository.save(entity);
     }
 
-    public List<AttendanceEntity> getAttendancesByUserId(Long userId) {
-        return attendanceRepository.findByUserId(userId);
+    public List<EventEntity> getAttendancesByUserId(Long userId) {
+        List<AttendanceEntity> attendanceList = attendanceRepository.findByUserId(userId);
+        return attendanceRepository.findByUserId(userId)
+                .stream()
+                .map(AttendanceEntity::getEvent)
+                .sorted(Comparator.comparing(EventEntity::getEventDateTime).reversed())
+                .collect(Collectors.toList());
     }
 }
