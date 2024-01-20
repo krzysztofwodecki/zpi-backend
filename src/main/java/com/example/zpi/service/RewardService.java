@@ -31,13 +31,13 @@ public class RewardService {
         this.redeemedRewardRepository = redeemedRewardRepository;
     }
 
-    public List<RewardEntity> getAllRewards(){
+    public List<RewardEntity> getAllRewards() {
         List<RewardEntity> rewards = new ArrayList<RewardEntity>();
         rewardRepository.findAll().forEach(rewards::add);
         return rewards;
     }
 
-    public List<RewardEntity> getRedeemedRewards(Long userId){
+    public List<RewardEntity> getRedeemedRewards(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
         return redeemedRewardRepository.findAllByUser(user)
@@ -46,13 +46,13 @@ public class RewardService {
                 .collect(Collectors.toList());
     }
 
-    public RewardEntity getRewardById(Long id){
+    public RewardEntity getRewardById(Long id) {
         return rewardRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reward not found with id: " + id));
     }
 
     @Transactional
-    public RedeemedRewardEntity redeemRewardForUser(Long rewardId){
+    public RedeemedRewardEntity redeemRewardForUser(Long rewardId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
         RewardEntity reward = rewardRepository.findById(rewardId)
@@ -60,7 +60,7 @@ public class RewardService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
-        if(user.getPoints() < reward.getValue()) {
+        if (user.getPoints() < reward.getValue()) {
             throw new IllegalArgumentException();
         }
 

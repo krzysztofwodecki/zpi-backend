@@ -1,8 +1,6 @@
 package com.example.zpi.repositories;
 
-import com.example.zpi.entities.EventEntity;
 import com.example.zpi.entities.LikedEventEntity;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

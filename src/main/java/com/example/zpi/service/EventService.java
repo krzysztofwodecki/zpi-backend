@@ -66,9 +66,7 @@ public class EventService {
 
     @Transactional
     public void deleteEvent(Long id) throws IllegalAccessException {
-        EventEntity existingEvent = eventRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
-
+        EventEntity existingEvent = getEventById(id);
         if (!isCurrentUserEventOwner(existingEvent)) {
             throw new IllegalAccessException();
         }
@@ -82,9 +80,7 @@ public class EventService {
 
     @Transactional
     public EventEntity updateEvent(Long eventId, EventEntity updatedEvent) throws IllegalAccessException {
-        EventEntity existingEvent = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
-
+        EventEntity existingEvent = getEventById(eventId);
         if (!isCurrentUserEventOwner(existingEvent)) {
             throw new IllegalAccessException();
         }
@@ -107,30 +103,19 @@ public class EventService {
     }
 
     boolean isCurrentUserEventOwner(EventEntity event) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long currentUserId = ((UserInfoDetails) authentication.getPrincipal()).getId();
+        Long currentUserId = getUserId();
         return currentUserId.equals(event.getCreatorId());
     }
 
-    public UserEntity getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
-    }
-
     public AttendanceEntity createAttendance(Long eventId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
-        EventEntity event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Reward not found with id: " + eventId));
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
-
+        EventEntity event = getEventById(eventId);
+        UserEntity user = userRepository.findById(getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         AttendanceEntity entity = new AttendanceEntity(user, event, java.time.LocalDateTime.now());
         return attendanceRepository.save(entity);
     }
 
     public List<EventEntity> getAttendancesByUserId(Long userId) {
-        List<AttendanceEntity> attendanceList = attendanceRepository.findByUserId(userId);
         return attendanceRepository.findByUserId(userId)
                 .stream()
                 .map(AttendanceEntity::getEvent)
@@ -139,36 +124,34 @@ public class EventService {
     }
 
     public EventEntity likeEvent(Long eventId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
-        EventEntity event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
-        if (likedEventRepository.existsByEvent_IdAndUser_Id(eventId, userId)) {
+        EventEntity event = getEventById(eventId);
+        UserEntity user = userRepository.findById(getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (likedEventRepository.existsByEvent_IdAndUser_Id(eventId, getUserId())) {
             return event;
         }
-        LikedEventEntity liked = new LikedEventEntity(event,user);
+        LikedEventEntity liked = new LikedEventEntity(event, user);
         return likedEventRepository.save(liked).getEvent();
     }
 
     public void unlikeEvent(Long eventId) throws IllegalArgumentException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
-        if (!likedEventRepository.existsByEvent_IdAndUser_Id(eventId, userId)) {
+        if (!likedEventRepository.existsByEvent_IdAndUser_Id(eventId, getUserId())) {
             throw new IllegalArgumentException();
         }
-        LikedEventEntity liked = likedEventRepository.findByEvent_IdAndUser_Id(eventId, userId);
+        LikedEventEntity liked = likedEventRepository.findByEvent_IdAndUser_Id(eventId, getUserId());
         likedEventRepository.delete(liked);
     }
 
     public List<EventEntity> getLikedEvents() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((UserInfoDetails) authentication.getPrincipal()).getId();
-        return likedEventRepository.findAllByUser_Id(userId)
+        return likedEventRepository.findAllByUser_Id(getUserId())
                 .stream()
                 .map(LikedEventEntity::getEvent)
                 .collect(Collectors.toList());
+    }
+
+    private Long getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ((UserInfoDetails) authentication.getPrincipal()).getId();
     }
 
 
