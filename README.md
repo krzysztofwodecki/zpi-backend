@@ -80,7 +80,9 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
     }
     ```
 ## Do reszty endpointów trzeba dołączyć header z kluczem jwt
-```Bearer {jwtkey}```
+```json 
+{"Authorization": "Bearer $jwtkey"}
+```
 
 ## Wylogowanie
 - **Endpoint:** `/auth/logout`
