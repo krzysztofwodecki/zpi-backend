@@ -23,11 +23,13 @@ public class EventEntity {
     private String eventName;
     private LocalDateTime eventDateTime;
     private String location;
+    private String description;
 
-    public EventEntity(Long creatorId, String name, LocalDateTime dateTime, String location){
+    public EventEntity(Long creatorId, String name, LocalDateTime dateTime, String location, String description){
         this.creatorId = creatorId;
         this.eventName = name;
         this.eventDateTime = dateTime;
         this.location = location;
+        this.description = description;
     }
 }

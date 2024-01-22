@@ -91,6 +91,8 @@ public class EventService {
             existingEvent.setEventDateTime(updatedEvent.getEventDateTime());
         if (updatedEvent.getLocation() != null)
             existingEvent.setLocation(updatedEvent.getLocation());
+        if (updatedEvent.getDescription() != null)
+            existingEvent.setDescription(updatedEvent.getDescription());
         return existingEvent;
     }
 

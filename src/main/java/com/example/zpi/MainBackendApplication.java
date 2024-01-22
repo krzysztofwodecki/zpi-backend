@@ -40,9 +40,9 @@ public class MainBackendApplication {
      return (args) -> {
          UserEntity user1 = new UserEntity("user1@exampl.com", "passwd", "ROLE_USER", 1000l);
          user1 = userInfoService.addUser(user1);
-         EventEntity event1 = new EventEntity(1L,"Event 1", LocalDateTime.now(), "Place 1");
+         EventEntity event1 = new EventEntity(1L,"Event 1", LocalDateTime.now(), "Place 1","ABC");
          event1 = eventRepo.save(event1);
-         EventEntity event2 = new EventEntity(2L,"Event 2", LocalDateTime.now(), "Place 2");
+         EventEntity event2 = new EventEntity(2L,"Event 2", LocalDateTime.now(), "Place 2", "ABC");
          event2 = eventRepo.save(event2);
          RewardEntity reward1 = new RewardEntity("reward1","desc",400L);
          reward1 = rewardRepo.save(reward1);
