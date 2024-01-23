@@ -36,12 +36,14 @@ public class UserInfoService implements UserDetailsService {
         return userDetail.map(UserInfoDetails::new) 
                 .orElseThrow(() -> new UsernameNotFoundException("User not found " + username)); 
     } 
-  
-    public UserEntity addUser(UserEntity userInfo) { 
-        userInfo.setPassword(encoder.encode(userInfo.getPassword()));
-        userInfo.setRoles("ROLE_USER");
-        return repository.save(userInfo); 
-    } 
-  
-  
+
+    public UserEntity addUser(UserEntity userInfo) {
+        try {
+            userInfo.setPassword(encoder.encode(userInfo.getPassword()));
+            userInfo.setRoles("ROLE_USER");
+            return repository.save(userInfo);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 } 

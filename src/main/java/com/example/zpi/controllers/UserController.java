@@ -2,7 +2,10 @@ package com.example.zpi.controllers;
 
 import java.util.Optional;
 
+import com.example.zpi.entities.EventEntity;
+import com.example.zpi.entities.UserDummy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,9 +40,14 @@ public class UserController {
 
     //register
     @PostMapping("/register")
-    public UserEntity addNewUser(@RequestBody UserEntity userInfo) {
-        userInfo.setPoints(0l);
-        return service.addUser(userInfo);
+    public ResponseEntity<UserEntity> addNewUser(@RequestBody UserDummy userInfo) {
+        UserEntity user = new UserEntity(userInfo.getEmail(), userInfo.getPassword());
+        UserEntity newUser = service.addUser(user);
+        if(newUser == null)
+        {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(newUser);
     }
 
     //login

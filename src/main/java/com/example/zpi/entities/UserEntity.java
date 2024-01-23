@@ -31,9 +31,16 @@ public class UserEntity {
     private String roles; 
     private Long points;
 
+    public UserEntity(String email, String password){
+        this.email = email;
+        this.password = password;
+        this.points = (long) 0;
+    }
+
     public UserEntity(String email, String password, String roles){
         this.email = email;
         this.password = password;
+        this.roles = roles;
         this.points = (long) 0;
     }
 
