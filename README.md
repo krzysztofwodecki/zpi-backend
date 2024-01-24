@@ -116,7 +116,29 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200
     ```json
-    [{"id":1,"creatorId":1,"eventName":"Event 1","eventDateTime":"2023-12-28T21:55:56.815799","location":"Place 1"},{"id":3,"creatorId":1,"eventName":"New event","eventDateTime":"2023-12-28T18:57:06.314245","location":"New place"},{"id":2,"creatorId":2,"eventName":"xsssss","eventDateTime":"2023-12-28T18:57:06.314245","location":"Place 2"}]
+    [
+      {
+        "id": 1,
+        "creatorId": 1,
+        "eventName": "Event 1",
+        "eventDateTime": "2023-12-28T21:55:56.815799",
+        "location": "Place 1"
+      },
+      {
+        "id": 3,
+        "creatorId": 1,
+        "eventName": "New event",
+        "eventDateTime": "2023-12-28T18:57:06.314245",
+        "location": "New place"
+      },
+      {
+        "id": 2,
+        "creatorId": 2,
+        "eventName": "xsssss",
+        "eventDateTime": "2023-12-28T18:57:06.314245",
+        "location": "Place 2"
+      }
+    ]
     ```
     
 ## Pobierz Wydarzenia Utworzone Przez Użytkownika
@@ -126,7 +148,15 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200
     ```json
-    [{"id":2,"creatorId":2,"eventName":"updated","eventDateTime":"2023-12-28T18:57:06.314245","location":"Place 2"}]  
+    [
+      {
+        "id": 2,
+        "creatorId": 2,
+        "eventName": "updated",
+        "eventDateTime": "2023-12-28T18:57:06.314245",
+        "location": "Place 2"
+      }
+    ]
     ```
 
 ## Dodaj Nowe Wydarzenie
@@ -135,12 +165,23 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Opis:** Tworzy nowe wydarzenie.
 - **Przykładowe body** 
     ```json
-    {"creatorId":1,"eventName":"New event","eventDateTime":"2023-12-28T18:57:06.314245","location":"New place"}
+    {
+      "creatorId": 1,
+      "eventName": "New event",
+      "eventDateTime": "2023-12-28T18:57:06.314245",
+      "location": "New place"
+    }
     ```
 - **Response:**
   - 201
     ```json
-    {"id":4,"creatorId":1,"eventName":"New event","eventDateTime":"2023-12-28T18:57:06.314245","location":"New place"}
+    {
+      "id": 4,
+      "creatorId": 1,
+      "eventName": "New event",
+      "eventDateTime": "2023-12-28T18:57:06.314245",
+      "location": "New place"
+    }
     ```
   - 400 - w przypadku wystąpienia null w którymś polu, niepoprawnie zbudowanego JSONa
 
@@ -150,12 +191,20 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Opis:** Aktualizuje istniejące wydarzenie. Jeśli dane pole nie zostanie podane, zachowana zostanie oryginalna wartość.
 - **Przykładowe body** 
     ```json
-    {"eventName":"updated"}
+    {
+      "eventName": "updated"
+    }
     ```
 - **Response:**
   - 200
     ```json
-    {"id":2,"creatorId":2,"eventName":"updated","eventDateTime":"2023-12-28T18:57:06.314245","location":"Place 2"}
+    {
+      "id": 2,
+      "creatorId": 2,
+      "eventName": "updated",
+      "eventDateTime": "2023-12-28T18:57:06.314245",
+      "location": "Place 2"
+    }
     ```
   - 404 - nie znaleziono wydarzenia z podanym id
   - 403 - użytkownik nie jest właścicielem wydarzenia
@@ -177,7 +226,13 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200
     ```json
-    {"id":3,"creatorId":1,"eventName":"New event","eventDateTime":"2023-12-28T18:57:06.314245","location":"New place"} 
+    {
+      "id": 3,
+      "creatorId": 1,
+      "eventName": "New event",
+      "eventDateTime": "2023-12-28T18:57:06.314245",
+      "location": "New place"
+    }
     ```
   - 404 - nie znaleziono
 
@@ -188,7 +243,13 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200 (info o wydarzeniu)
     ```json
-    {"id":2,"creatorId":2,"eventName":"Event 2","eventDateTime":"2024-01-20T20:45:44.125845","location":"Place 2"}
+    {
+      "id": 2,
+      "creatorId": 2,
+      "eventName": "Event 2",
+      "eventDateTime": "2024-01-20T20:45:44.125845",
+      "location": "Place 2"
+    }
     ```
   - 404 - nie znaleziono
  
@@ -207,7 +268,15 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200 
     ```json
-    [{"id":3,"creatorId":1,"eventName":"updated","eventDateTime":"2023-12-28T18:57:06.314245","location":"New place"}]
+     [
+      {
+        "id": 3,
+        "creatorId": 1,
+        "eventName": "updated",
+        "eventDateTime": "2023-12-28T18:57:06.314245",
+        "location": "New place"
+      }
+    ]
     ```
   
 ## Dodaj obecność jeśli nie istnieje
@@ -217,7 +286,23 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200
     ```json
-    {"id":4,"user":{"id":1,"email":"user1@exampl.com","roles":"ROLE_USER","points":200},"event":{"id":2,"creatorId":2,"eventName":"Event 2","eventDateTime":"2024-01-20T20:45:44.125845","location":"Place 2"},"checkInTime":"2024-01-20T21:14:24.079852995"}
+    {
+      "id": 4,
+      "user": {
+        "id": 1,
+        "email": "user1@exampl.com",
+        "roles": "ROLE_USER",
+        "points": 200
+      },
+      "event": {
+        "id": 2,
+        "creatorId": 2,
+        "eventName": "Event 2",
+        "eventDateTime": "2024-01-20T20:45:44.125845",
+        "location": "Place 2"
+      },
+      "checkInTime": "2024-01-20T21:14:24.079852995"
+    }
     ```
   - 404 - nie znaleziono użytkownika lub wydarzenia
 
@@ -228,7 +313,15 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200
     ```json
-    [{"id":2,"creatorId":2,"eventName":"Event 2","eventDateTime":"2024-01-20T20:45:44.125845","location":"Place 2"}]
+    [
+      {
+        "id": 2,
+        "creatorId": 2,
+        "eventName": "Event 2",
+        "eventDateTime": "2024-01-20T20:45:44.125845",
+        "location": "Place 2"
+      }
+    ]
     ```
 
 ## Pobierz listę nagród
@@ -238,7 +331,20 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200
     ```json
-    [{"id":1,"name":"reward1","description":"desc","value":400},{"id":2,"name":"reward2","description":"desc2","value":900}]
+    [
+      {
+        "id": 1,
+        "name": "reward1",
+        "description": "desc",
+        "value": 400
+      },
+      {
+        "id": 2,
+        "name": "reward2",
+        "description": "desc2",
+        "value": 900
+      }
+    ]
     ```
 
 ## Pobierz listę nagród wypłaconych przez użytkownika
@@ -248,7 +354,20 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200
     ```json
-    [{"id":1,"name":"reward1","description":"desc","value":400},{"id":1,"name":"reward1","description":"desc","value":400}]
+    [
+      {
+        "id": 1,
+        "name": "reward1",
+        "description": "desc",
+        "value": 400
+      },
+      {
+        "id": 1,
+        "name": "reward1",
+        "description": "desc",
+        "value": 400
+      }
+    ]
     ```
   - 404 \
   Jeśli użytkownik nie istnieje.
@@ -260,7 +379,12 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200
     ```json
-    {"id":1,"name":"reward1","description":"desc","value":400}
+    {
+      "id": 1,
+      "name": "reward1",
+      "description": "desc",
+      "value": 400
+    }
     ```
   - 404 \
   Jeśli nagroda nie istnieje.
@@ -272,7 +396,21 @@ https://www.postman.com/satellite-cosmonaut-19244/workspace/my-workspace/collect
 - **Response:**
   - 200
     ```json
-    {"id":1,"reward":{"id":1,"name":"reward1","description":"desc","value":400},"user":{"id":1,"email":"user1@exampl.com","roles":"ROLE_USER","points":600}}
+    {
+      "id": 1,
+      "reward": {
+        "id": 1,
+        "name": "reward1",
+        "description": "desc",
+        "value": 400
+      },
+      "user": {
+        "id": 1,
+        "email": "user1@exampl.com",
+        "roles": "ROLE_USER",
+        "points": 600
+      }
+    }
     ```
   - 404 \
   Jeśli nagroda nie istnieje.
